@@ -1,0 +1,6 @@
+# vs code #
+.vscode
+
+# python3 #
+__pycache__
+*.pyc
