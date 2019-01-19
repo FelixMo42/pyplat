@@ -1,11 +1,14 @@
 import pyglet
-from game.Sprite import Sprite
+import random
+
+from game.Player import Player
+from game.Platform import Platform
 
 class App(pyglet.window.Window):
     fps = 60 
 
     def __init__(self):
-        super().__init__(width=500, height=500, caption="pyplat")
+        super().__init__(width=1000, height=500, caption="pyplat")
 
         self.keyIsDown = pyglet.window.key.KeyStateHandler()
         self.push_handlers(self.keyIsDown)
@@ -16,13 +19,21 @@ class App(pyglet.window.Window):
         self.foreground = pyglet.graphics.OrderedGroup(2)
         self.sprites = []
 
-        Sprite(world=self)
+        self.player = Player(world=self, x=0, y=150)
+
+        self.pos = 500
+        Platform(world=self, x=0, y=0, width=500, height=30)
 
         pyglet.clock.schedule(self.onUpdate, 1/self.fps)
 
     def onUpdate(self, dt, ex_dt):
         for sprite in self.sprites:
             sprite.onUpdate(dt)
+
+        if self.width + self.player.x > self.pos:
+            width = random.randint(100, 500)
+            Platform(world=self, x=self.pos, y=random.randint(30, 250), width=width, height=30)
+            self.pos += width + random.randint(0, 100)
 
     def on_draw(self):
         self.clear()
