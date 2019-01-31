@@ -9,10 +9,10 @@ class Sprite:
 
     color = (100,100,100,100)
     scale = 1
-    gravity = 9.8 * 50
+    gravity = 9.8 * 75
     static = False
 
-    def __init__(self, world, x=0, y=0, width=100, height=100):
+    def __init__(self, world, x=0, y=0, width=60, height=60):
         image = pyglet.image.create(
             width=width, height=height, 
             pattern=pyglet.image.SolidColorImagePattern(self.color)
@@ -61,9 +61,12 @@ class Sprite:
         self.x = self.x + x
         self.y = self.y + y
 
+        self.updatePosition()
+
+    def updatePosition(self):
         self.sprite.position = (
-            int(self.x + x),
-            int(self.y + y)
+            int(self.x),
+            int(self.y)
         )
 
     def onCollide(self):

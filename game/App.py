@@ -5,10 +5,12 @@ from game.Player import Player
 from game.Platform import Platform
 
 class App(pyglet.window.Window):
-    fps = 60 
+    fps = 60
+
+    map_width = 1000
 
     def __init__(self):
-        super().__init__(width=1000, height=500, caption="pyplat")
+        super().__init__(width=1000, height=500, caption="pyjinja")
 
         self.keyIsDown = pyglet.window.key.KeyStateHandler()
         self.push_handlers(self.keyIsDown)
@@ -19,22 +21,34 @@ class App(pyglet.window.Window):
         self.foreground = pyglet.graphics.OrderedGroup(2)
         self.sprites = []
 
-        self.player = Player(world=self, x=0, y=150)
-
-        self.pos = 500
-        Platform(world=self, x=0, y=0, width=500, height=30)
+        self.player = Player(world=self, x=0, y=300)
 
         pyglet.clock.schedule(self.onUpdate, 1/self.fps)
+
+        x = 0
+        while x < self.map_width:
+            width = random.randint(100, 500)
+            y = random.randint(30, 250)
+
+            if x == 0:
+                Platform(world=self, x=x + self.map_width, y=y, width=width, height=30)
+            if x + width < self.map_width:
+                Platform(world=self, x=x - self.map_width, y=y, width=width, height=30)
+
+            Platform(world=self, x=x, y=y, width=width, height=30)
+            x += width + random.randint(0, 100)
 
     def onUpdate(self, dt, ex_dt):
         for sprite in self.sprites:
             sprite.onUpdate(dt)
 
-        if self.width + self.player.x > self.pos:
-            width = random.randint(100, 500)
-            Platform(world=self, x=self.pos, y=random.randint(30, 250), width=width, height=30)
-            self.pos += width + random.randint(0, 100)
-
     def on_draw(self):
         self.clear()
         self.batch.draw()
+
+        pyglet.gl.glTranslatef(self.map_width, 0, 0)
+        self.batch.draw()
+
+        pyglet.gl.glTranslatef(-2 * self.map_width, 0, 0)
+        self.batch.draw()
+        
