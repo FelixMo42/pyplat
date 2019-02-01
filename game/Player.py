@@ -45,8 +45,8 @@ class Player(Sprite):
 
     def move(self, x, y):
         super().move(x,y)
-        self.x = self.x % 1000
-        self.y = self.y % 1000
+        self.x = self.x % self.world.map_width
+        #self.y = self.y % 1000
         self.updatePosition()
 
     def onCollide(self):

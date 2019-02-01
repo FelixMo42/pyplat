@@ -3,11 +3,12 @@ import random
 
 from game.Player import Player
 from game.Platform import Platform
+from game.Enemy import Enemy
 
 class App(pyglet.window.Window):
     fps = 60
 
-    map_width = 1000
+    map_width = 5000
 
     def __init__(self):
         super().__init__(width=1000, height=500, caption="pyjinja")
@@ -21,6 +22,9 @@ class App(pyglet.window.Window):
         self.foreground = pyglet.graphics.OrderedGroup(2)
         self.sprites = []
 
+        for _ in range(3):
+            Enemy(world=self, x=random.randint(10, self.map_width-100),y=600)
+
         self.player = Player(world=self, x=0, y=300)
 
         pyglet.clock.schedule(self.onUpdate, 1/self.fps)
@@ -30,9 +34,13 @@ class App(pyglet.window.Window):
             width = random.randint(100, 500)
             y = random.randint(30, 250)
 
+            width = min(width, self.map_width - x)
+            if width < 100:
+                break
+
             if x == 0:
                 Platform(world=self, x=x + self.map_width, y=y, width=width, height=30)
-            if x + width < self.map_width:
+            if x + width >= self.map_width:
                 Platform(world=self, x=x - self.map_width, y=y, width=width, height=30)
 
             Platform(world=self, x=x, y=y, width=width, height=30)
