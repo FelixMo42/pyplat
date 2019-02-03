@@ -1,6 +1,6 @@
 import pyglet
 
-from game.Sprite import Sprite
+from game.sprites.Sprite import Sprite
 
 class Enemy(Sprite):
     speed = 100

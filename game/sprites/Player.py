@@ -1,6 +1,6 @@
 import pyglet
 
-from game.Sprite import Sprite
+from game.sprites.Sprite import Sprite
 
 class Player(Sprite):
     speed = 300
@@ -12,7 +12,12 @@ class Player(Sprite):
 
     grounded = False
 
-    def onUpdate(self, dt):
+    def __init__(self, id, *args, **kwargs):
+        Sprite.__init__(self, *args, **kwargs)
+
+        self.id = id
+        
+    def update(self, dt):
         #if self.world.keyIsDown[pyglet.window.key.LEFT]:
         #    self.velX -= self.speed * dt
         #elif self.world.keyIsDown[pyglet.window.key.RIGHT]:
@@ -20,7 +25,7 @@ class Player(Sprite):
         #elif self.grounded:
         #    self.velX /= 2 #todo: better drag math
 
-        self.velX += 10 * dt
+        #self.velX += 10 * dt
 
         k = 1
 
@@ -43,6 +48,18 @@ class Player(Sprite):
         pyglet.gl.glLoadIdentity()
         pyglet.gl.glTranslatef(self.offset - self.x - self.width / 2, 0, 0)
 
+        # send data
+
+        self.world.connection.sendall(
+            str({
+                "id": self.id,
+                "x": self.x,
+                "y": self.y,
+                "velX": self.velX,
+                "velY": self.velY
+            }).encode("utf-8") + b"\n"
+        )
+
     def move(self, x, y):
         super().move(x,y)
         self.x = self.x % self.world.map_width
@@ -53,4 +70,5 @@ class Player(Sprite):
         self.grounded = True
 
         if self.velX == 0:
+            #self.world.on_close()
             pyglet.app.exit()
