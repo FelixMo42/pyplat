@@ -4,18 +4,15 @@ import socket
 import select
 import json
 
-from game.scenes.Game import Game
-from game.scenes.Menu import Menu
-
 class App(pyglet.window.Window):
     fps = 60
 
     map_width = 5000
 
-    def __init__(self):
-        super().__init__(width=1000, height=500, caption="pyjinja")
+    def __init__(self, scene, width=1000, height=500, caption="pyapp"):
+        super().__init__(width=width, height=height, caption=caption)
 
-        self.scene = Game(self)
+        self.scene = scene(self)
         self.scene.onStart()
 
         self.keyIsDown = pyglet.window.key.KeyStateHandler()

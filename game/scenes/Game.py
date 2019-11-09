@@ -10,7 +10,7 @@ from game.sprites.Enemy import Enemy
 from game.sprites.Platform import Platform
 
 class Game(Scene):
-    map_width = 500
+    map_width = 2000
 
     def onStart(self):
         # sprite managment
@@ -28,7 +28,7 @@ class Game(Scene):
         self.player = Player(id=self.recv(), world=self, x=5, y=300)
 
         # generate map
-        self.generateMap(1)
+        self.generateMap(10)
 
     def onDraw(self):
         self.batch.draw()
